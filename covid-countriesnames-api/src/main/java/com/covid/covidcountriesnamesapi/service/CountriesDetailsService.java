@@ -6,6 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -22,7 +23,7 @@ public class CountriesDetailsService {
 	private static final String COUNTRY_WISE_DATA_API_URL= "https://api.covid19api.com/countries";
 	
 	//@PostConstruct
-	public  CountriesNames fetchVirusData() throws IOException, InterruptedException {
+	public  List<CountryInfo> fetchVirusData() throws IOException, InterruptedException {
         //HttpClient client = HttpClientBuilder.create().build();
         //HttpResponse response = client.execute(new HttpGet(SAMPLE_URL));
 		
@@ -38,15 +39,10 @@ public class CountriesDetailsService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         //read json file and convert to customer object
-       CountriesNames countrynames = objectMapper.readValue(httpResponse.body(), CountriesNames.class);
+       List<CountryInfo> countrynames = objectMapper.readValue(httpResponse.body(), List.class);
         
         System.out.println(countrynames);
-        
-       if (countrynames!=null)
-        return countrynames;
-        
-        else 
-        	return new CountriesNames();
+        return countrynames == null ? Collections.emptyList() : countrynames;
 
     }
 }
